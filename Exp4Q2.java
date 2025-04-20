@@ -91,7 +91,7 @@ public class Exp4Q2
     static char getIPClass(String ip)
     {
         int firstOctet = Integer.parseInt(ip.split("\\.")[0]);
-        if (firstOctet >= 1 && firstOctet <= 126) return 'A';
+        if (firstOctet >= 1 && firstOctet <= 127) return 'A';
         if (firstOctet >= 128 && firstOctet <= 191) return 'B';
         if (firstOctet >= 192 && firstOctet <= 223) return 'C';
         return 'X'; // unsupported
