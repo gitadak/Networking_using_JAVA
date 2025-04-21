@@ -1,6 +1,10 @@
+/*
+Write a program to implement error detection using CRC used in Data Link layer
+*/
+
 import java.util.Scanner;
 
-public class CRC
+public class Exp11Q1
 {
     private static String xor(String dividend, String divisor)
     {
