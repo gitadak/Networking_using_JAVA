@@ -88,7 +88,11 @@ public class Exp4Q2
             String[] networkAddress = calcNetworkAddress(ipClass, ipParts);
             subnetting(networkAddress, subnetCount);
         }
-
+        else
+        {
+            System.out.println("Subnetting is not possible");
+        }
+        
         scanner.close();
     }
 }
