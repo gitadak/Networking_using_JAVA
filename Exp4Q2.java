@@ -6,7 +6,106 @@ so modify the program accordingly) as input and print the subnet mask
 as well as subnetwork address of each subnet.
 */
 
-import java.util.*;
+import java.util.Scanner;
+
+public class Exp4Q2
+{
+    // Determine the class of the IP address
+    private static char calcClass(String firstPart)
+    {
+        int firstOctet = Integer.parseInt(firstPart);
+        if (firstOctet >= 0 && firstOctet <= 127) return 'A';
+        else if (firstOctet >= 128 && firstOctet <= 191) return 'B';
+        else if (firstOctet >= 192 && firstOctet <= 223) return 'C';
+        else return 'X'; //Subnetting is not possible
+    }
+
+    // Calculate the default network address based on IP class
+    private static String[] calcNetworkAddress(char ipClass, String[] parts) 
+    {
+        String[] networkAddress = new String[4];
+        int[] defaultMask = new int[4];
+
+        switch (ipClass) 
+        {
+            case 'A':
+                defaultMask = new int[]{255, 0, 0, 0};
+                break;
+            case 'B':
+                defaultMask = new int[]{255, 255, 0, 0};
+                break;
+            case 'C':
+                defaultMask = new int[]{255, 255, 255, 0};
+                break;
+            default:
+                defaultMask = new int[]{255, 255, 255, 255};
+        }
+
+        for (int i = 0; i < 4; i++) 
+        {
+            int part = Integer.parseInt(parts[i]);
+            networkAddress[i] = String.valueOf(part & defaultMask[i]);
+        }
+
+        return networkAddress;
+    }
+
+    // Calculate and display subnetwork addresses
+    private static void subnetting(String[] networkAddress, int subnetCount) 
+    {
+        int increment = (int) Math.ceil(256.0 / subnetCount);
+
+        for (int i = 0; i < subnetCount; i++) 
+        {
+            System.out.print("Subnetwork address of subnet " + (i + 1) + " = ");
+
+            // Print first three octets
+            for (int j = 0; j < 3; j++) 
+            {
+                System.out.print(networkAddress[j] + ".");
+            }
+
+            // Calculate and print fourth octet
+            int lastOctet = Integer.parseInt(networkAddress[3]) + (i * increment);
+            System.out.println(lastOctet);
+        }
+    }
+
+    public static void main(String[] args) 
+    {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the IP address: ");
+        String ip = scanner.next();
+        String[] ipParts = ip.split("\\.");
+
+        System.out.print("Enter the number of subnets: ");
+        int subnetCount = scanner.nextInt();
+
+        char ipClass = calcClass(ipParts[0]);
+        if(ipClass != 'X')
+        {
+            String[] networkAddress = calcNetworkAddress(ipClass, ipParts);
+            subnetting(networkAddress, subnetCount);
+        }
+
+        scanner.close();
+    }
+}
+
+/*
+Output:
+------
+Enter the IP address: 200.10.20.0
+Enter the number of subnets: 5
+Subnetwork address of subnet 1 = 200.10.20.0
+Subnetwork address of subnet 2 = 200.10.20.52
+Subnetwork address of subnet 3 = 200.10.20.104
+Subnetwork address of subnet 4 = 200.10.20.156
+Subnetwork address of subnet 5 = 200.10.20.208
+*/
+
+/*import java.util.*;
 
 public class Exp4Q2
 {
@@ -91,7 +190,7 @@ public class Exp4Q2
     static char getIPClass(String ip)
     {
         int firstOctet = Integer.parseInt(ip.split("\\.")[0]);
-        if (firstOctet >= 1 && firstOctet <= 127) return 'A';
+        if (firstOctet >= 1 && firstOctet <= 126) return 'A';
         if (firstOctet >= 128 && firstOctet <= 191) return 'B';
         if (firstOctet >= 192 && firstOctet <= 223) return 'C';
         return 'X'; // unsupported
