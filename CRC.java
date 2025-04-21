@@ -1,33 +1,42 @@
 import java.util.Scanner;
 
-public class CRC {
-
-  
-    private static String xor(String dividend, String divisor) {
+public class CRC
+{
+    private static String xor(String dividend, String divisor)
+    {
         StringBuilder result = new StringBuilder();
-        for (int i = 1; i < divisor.length(); i++) {
+        for (int i = 1; i < divisor.length(); i++)
+        {
             result.append(dividend.charAt(i) == divisor.charAt(i) ? '0' : '1');
         }
         return result.toString();
     }
 
   
-    private static String mod2Division(String dividend, String divisor) {
+    private static String mod2Division(String dividend, String divisor)
+    {
         int pick = divisor.length();
         String temp = dividend.substring(0, pick);
 
-        while (pick < dividend.length()) {
-            if (temp.charAt(0) == '1') {
+        while (pick < dividend.length())
+        {
+            if (temp.charAt(0) == '1')
+            {
                 temp = xor(temp, divisor) + dividend.charAt(pick);
-            } else {
+            }
+            else 
+            {
                 temp = xor(temp, "0".repeat(divisor.length())) + dividend.charAt(pick);
             }
             pick++;
         }
 
-        if (temp.charAt(0) == '1') {
+        if (temp.charAt(0) == '1') 
+        {
             temp = xor(temp, divisor);
-        } else {
+        } 
+        else 
+        {
             temp = xor(temp, "0".repeat(divisor.length()));
         }
 
@@ -35,19 +44,22 @@ public class CRC {
     }
 
    
-    private static String encodeData(String dataword, String generator) {
+    private static String encodeData(String dataword, String generator) 
+    {
         int generatorLength = generator.length();
         String appendedData = dataword + "0".repeat(generatorLength - 1);
         String remainder = mod2Division(appendedData, generator);
         return dataword + remainder;
     }
 
-    private static boolean checkData(String receivedData, String generator) {
+    private static boolean checkData(String receivedData, String generator) 
+    {
         String remainder = mod2Division(receivedData, generator);
         return remainder.replace("0", "").isEmpty();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter dataword (binary): ");
@@ -65,9 +77,12 @@ public class CRC {
         String receivedData = scanner.next();
 
         
-        if (checkData(receivedData, generator)) {
+        if (checkData(receivedData, generator)) 
+        {
             System.out.println("No error detected in received data.");
-        } else {
+        } 
+        else 
+        {
             System.out.println("Error detected in received data!");
         }
 
