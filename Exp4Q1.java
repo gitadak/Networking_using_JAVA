@@ -29,18 +29,20 @@ public class Exp4Q1
     }
 
     // Determine the class of the IP
-    private static char getIPClass(int firstOctet) 
+    private static char getIPClass(int firstOctet)
     {
-        if (firstOctet >= 0 && firstOctet <= 127)
+        if (firstOctet >= 0 && firstOctet <= 127) 
             return 'A';
-        else if (firstOctet >= 128 && firstOctet <= 191)
+        else if (firstOctet >= 128 && firstOctet <= 191) 
             return 'B';
-        else if (firstOctet >= 192 && firstOctet <= 223)
+        else if (firstOctet >= 192 && firstOctet <= 223) 
             return 'C';
-        else if (firstOctet >= 224 && firstOctet <= 239)
+        else if(firstOctet >= 224 && firstOctet <= 239)
             return 'D';
-        else
-            return 'E';
+        else if(firstOctet >= 240 && firstOctet <= 255)
+            return 'E';   
+        else 
+            return 'X';
     }
 
     // Get the network address based on the class
@@ -69,6 +71,7 @@ public class Exp4Q1
             System.out.println("Converted Binary to Decimal: " + ip);
         }
     
+        // IP Validation starts
         String[] octets = ip.split("\\.");
         if (octets.length != 4) 
         {
@@ -98,6 +101,7 @@ public class Exp4Q1
             sc.close();
             return;
         }
+        // IP Validation ends
     
         char ipClass = getIPClass(firstOctet);
         String networkAddress = getNetworkAddress(octets, ipClass);
