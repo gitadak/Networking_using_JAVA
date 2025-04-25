@@ -11,48 +11,42 @@ import java.util.Scanner;
 public class Exp4Q2
 {
     // Determine the class of the IP address
-    private static char calcClass(String firstPart)
+    private static char getIPClass(int firstOctet)
     {
-        int firstOctet = Integer.parseInt(firstPart);
-        if (firstOctet >= 0 && firstOctet <= 127) return 'A';
-        else if (firstOctet >= 128 && firstOctet <= 191) return 'B';
-        else if (firstOctet >= 192 && firstOctet <= 223) return 'C';
-        else return 'X'; //Subnetting is not possible
+        if (firstOctet >= 0 && firstOctet <= 127) 
+            return 'A';
+        else if (firstOctet >= 128 && firstOctet <= 191) 
+            return 'B';
+        else if (firstOctet >= 192 && firstOctet <= 223) 
+            return 'C';
+        else if(firstOctet >= 224 && firstOctet <= 239)
+            return 'D';
+        else if(firstOctet >= 240 && firstOctet <= 255)
+            return 'E';   
+        else 
+            return 'X';
     }
 
     // Calculate the default network address based on IP class
-    private static String[] calcNetworkAddress(char ipClass, String[] parts) 
+    private static String getNetworkAddress(String[] octets, char ipClass) 
     {
-        String[] networkAddress = new String[4];
-        int[] defaultMask = new int[4];
-
         switch (ipClass) 
         {
-            case 'A':
-                defaultMask = new int[]{255, 0, 0, 0};
-                break;
-            case 'B':
-                defaultMask = new int[]{255, 255, 0, 0};
-                break;
-            case 'C':
-                defaultMask = new int[]{255, 255, 255, 0};
-                break;
-            default:
-                defaultMask = new int[]{255, 255, 255, 255};
+            case 'A': 
+                return octets[0] + ".0.0.0";
+            case 'B': 
+                return octets[0] + "." + octets[1] + ".0.0";
+            case 'C': 
+                return octets[0] + "." + octets[1] + "." + octets[2] + ".0";
+            default: 
+                return "Not applicable for Class " + ipClass;
         }
-
-        for (int i = 0; i < 4; i++) 
-        {
-            int part = Integer.parseInt(parts[i]);
-            networkAddress[i] = String.valueOf(part & defaultMask[i]);
-        }
-
-        return networkAddress;
     }
 
     // Calculate and display subnetwork addresses
-    private static void subnetting(String[] networkAddress, int subnetCount) 
+    private static void subnetting(String networkAddress, int subnetCount) 
     {
+        String[] nwAddress = networkAddress.split("\\.");
         int increment = (int) Math.ceil(256.0 / subnetCount);
 
         for (int i = 0; i < subnetCount; i++) 
@@ -62,11 +56,11 @@ public class Exp4Q2
             // Print first three octets
             for (int j = 0; j < 3; j++) 
             {
-                System.out.print(networkAddress[j] + ".");
+                System.out.print(nwAddress[j] + ".");
             }
 
             // Calculate and print fourth octet
-            int lastOctet = Integer.parseInt(networkAddress[3]) + (i * increment);
+            int lastOctet = Integer.parseInt(nwAddress[3]) + (i * increment);
             System.out.println(lastOctet);
         }
     }
@@ -77,22 +71,21 @@ public class Exp4Q2
 
         System.out.print("Enter the IP address: ");
         String ip = scanner.next();
-        String[] ipParts = ip.split("\\.");
+        String[] octets = ip.split("\\.");
 
         System.out.print("Enter the number of subnets: ");
         int subnetCount = scanner.nextInt();
 
-        char ipClass = calcClass(ipParts[0]);
-        if(ipClass != 'X')
+        int firstOctet = Integer.parseInt(octets[0]);
+        char ipClass = getIPClass(firstOctet);
+        if(ipClass == 'A' || ipClass == 'B' || ipClass == 'C')
         {
-            String[] networkAddress = calcNetworkAddress(ipClass, ipParts);
+            String networkAddress = getNetworkAddress(octets, ipClass);
             subnetting(networkAddress, subnetCount);
         }
         else
-        {
-            System.out.println("Subnetting is not possible");
-        }
-        
+            System.out.println("Subnetting is not possible for class "+ipClass);
+
         scanner.close();
     }
 }
