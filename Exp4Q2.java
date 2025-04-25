@@ -44,26 +44,28 @@ public class Exp4Q2
     }
 
     // Calculate and display subnetwork addresses
-    private static void subnetting(String networkAddress, int subnetCount) 
+    private static void subnetting(String networkAddress, int subnetCount, char ipClass) 
     {
-        String[] nwAddress = networkAddress.split("\\.");
-        int increment = (int) Math.ceil(256.0 / subnetCount);
-
-        for (int i = 0; i < subnetCount; i++) 
+        String[] parts = networkAddress.split("\\.");
+        
+        int pos;
+        if (ipClass == 'A')
+            pos = 1;
+        else if (ipClass == 'B')
+            pos = 2;
+        else
+            pos = 3;
+    
+        int base = Integer.parseInt(parts[pos]);
+        int diff = (int)(Math.floor(256.0 / subnetCount));
+    
+        System.out.println("The subnet addresses are : ");
+        for (int i = 0; i < subnetCount; i++)
         {
-            System.out.print("Subnetwork address of subnet " + (i + 1) + " = ");
-
-            // Print first three octets
-            for (int j = 0; j < 3; j++) 
-            {
-                System.out.print(nwAddress[j] + ".");
-            }
-
-            // Calculate and print fourth octet
-            int lastOctet = Integer.parseInt(nwAddress[3]) + (i * increment);
-            System.out.println(lastOctet);
+            parts[pos] = Integer.toString(base + (i * diff));
+            System.out.println(parts[0] + "." + parts[1] + "." + parts[2] + "." + parts[3]);
         }
-    }
+    } 
 
     public static void main(String[] args) 
     {
@@ -81,7 +83,7 @@ public class Exp4Q2
         if(ipClass == 'A' || ipClass == 'B' || ipClass == 'C')
         {
             String networkAddress = getNetworkAddress(octets, ipClass);
-            subnetting(networkAddress, subnetCount);
+            subnetting(networkAddress, subnetCount, ipClass);
         }
         else
             System.out.println("Subnetting is not possible for class "+ipClass);
@@ -93,13 +95,14 @@ public class Exp4Q2
 /*
 Output:
 ------
-Enter the IP address: 200.10.20.0
+Enter the IP address: 129.32.14.21
 Enter the number of subnets: 5
-Subnetwork address of subnet 1 = 200.10.20.0
-Subnetwork address of subnet 2 = 200.10.20.52
-Subnetwork address of subnet 3 = 200.10.20.104
-Subnetwork address of subnet 4 = 200.10.20.156
-Subnetwork address of subnet 5 = 200.10.20.208
+The subnet addresses are : 
+129.32.0.0
+129.32.51.0
+129.32.102.0
+129.32.153.0
+129.32.204.0
 */
 
 /*import java.util.*;
