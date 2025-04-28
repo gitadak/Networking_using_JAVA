@@ -1,0 +1,57 @@
+4. public static void main(String[] args){
+
+5. try{
+
+6. ServerSocket ss=new ServerSocket(6666);
+
+7. Socket s=ss.accept();//establishes connection
+
+8. DataInputStream dis=new DataInputStream(s.getInputStream());
+
+9. String str=(String)dis.readUTF();
+
+10. System.out.println("message= "+str);
+
+11. ss.close();
+
+12. }catch(Exception e){System.out.println(e);}
+
+13. }
+
+14. }
+
+File: MyClient.java
+
+1. import java.io.*;
+
+2. import java.net.*;
+
+3. public class MyClient {
+
+4. public static void main(String[] args) {
+
+5. try{
+
+6. Socket s=new Socket("localhost",6666);
+
+7. DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+
+8. dout.writeUTF("Hello Server");
+
+9. dout.flush();
+
+10. dout.close();
+
+11. s.close();
+
+12. }catch(Exception e){System.out.println(e);}
+
+13. }
+
+14. }File: MyServer.java
+
+1. import java.io.*;
+
+2. import java.net.*;
+
+3. public class MyServer {
