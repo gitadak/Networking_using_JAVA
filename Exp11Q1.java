@@ -16,7 +16,16 @@ public class Exp11Q1
         return result.toString();
     }
 
-  
+    private static String repeatChar(char ch, int count)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < count; i++)
+        {
+            sb.append(ch);
+        }
+        return sb.toString();
+    }
+
     private static String mod2Division(String dividend, String divisor)
     {
         int pick = divisor.length();
@@ -30,7 +39,7 @@ public class Exp11Q1
             }
             else 
             {
-                temp = xor(temp, "0".repeat(divisor.length())) + dividend.charAt(pick);
+                temp = xor(temp, repeatChar('0', divisor.length())) + dividend.charAt(pick);
             }
             pick++;
         }
@@ -41,17 +50,16 @@ public class Exp11Q1
         } 
         else 
         {
-            temp = xor(temp, "0".repeat(divisor.length()));
+            temp = xor(temp, repeatChar('0', divisor.length()));
         }
 
         return temp;
     }
 
-   
     private static String encodeData(String dataword, String generator) 
     {
         int generatorLength = generator.length();
-        String appendedData = dataword + "0".repeat(generatorLength - 1);
+        String appendedData = dataword + repeatChar('0', generatorLength - 1);
         String remainder = mod2Division(appendedData, generator);
         return dataword + remainder;
     }
@@ -72,15 +80,12 @@ public class Exp11Q1
         System.out.print("Enter generator polynomial (binary): ");
         String generator = scanner.next();
 
-        
         String codeword = encodeData(dataword, generator);
         System.out.println("Transmitted codeword: " + codeword);
 
-        
         System.out.print("Enter received codeword (binary): ");
         String receivedData = scanner.next();
 
-        
         if (checkData(receivedData, generator)) 
         {
             System.out.println("No error detected in received data.");
@@ -93,3 +98,13 @@ public class Exp11Q1
         scanner.close();
     }
 }
+
+/*
+Output:
+------
+Enter dataword (binary): 100100
+Enter generator polynomial (binary): 1101
+Transmitted codeword: 100100001
+Enter received codeword (binary): 100100001
+No error detected in received data.
+*/
